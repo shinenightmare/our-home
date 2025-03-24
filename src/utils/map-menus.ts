@@ -1,5 +1,7 @@
 import { RouteRecordRaw } from "vue-router"
 import router from '@/router'
+import { pa } from "element-plus/es/locales.mjs"
+import { subMenuProps } from "element-plus/lib/components/index.js"
 
 function findLocalRoutes(){
     const localRouters:RouteRecordRaw[] = []
@@ -38,4 +40,21 @@ export function mapMenusToRoutes(userMenus: any[]){
         }
     }
     return routes;
+}
+
+interface IBreadCrumb{
+    name:string,
+    path:string
+}
+export function mapPathToBreadcrumbs(path:string,userMenus:any[]){
+    const BreadCrumbs:IBreadCrumb[]= [];
+    for(const menu of userMenus){
+        for(const subMenu of menu.childMenu){
+            if(subMenu.path === path){
+                BreadCrumbs.push({name:menu.name ,path:menu.path})
+                BreadCrumbs.push({name:subMenu.name , path:subMenu.url})
+            }
+        }
+    }
+    return BreadCrumbs;
 }

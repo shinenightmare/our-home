@@ -1,6 +1,7 @@
 import { TOKEN,USER_MENUS } from '@/global/constants';
 import { localCache } from '@/utils/cache';
 import { firstMenu } from '@/utils/map-menus';
+import path from 'path';
 
 import { createRouter, createWebHashHistory,RouteRecordRaw } from 'vue-router';
 const routes:Array<RouteRecordRaw>= [
@@ -46,13 +47,20 @@ const router = createRouter({
 router.beforeEach((to,from,next)=>{
     const token = localCache.getCache(TOKEN)
     const userMenus = localCache.getCache(USER_MENUS);
-    if(token && userMenus){
-        if(to.path==='/main'){
-            next(firstMenu)
+    if (token && userMenus) {
+        if (to.path === '/main') {
+            next(firstMenu);
+        } else {
+            next();
         }
-        next();
+    } else {
+        // 如果没有 token 或 userMenus，重定向到登录页
+        if (to.path !== '/login') {
+            next('login');
+        } else {
+            next();
+        }
     }
-    next()
 })
 
 export default router;
